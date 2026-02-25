@@ -13,7 +13,13 @@ enum AppFont {
         static let title = Font.custom("SFUIDisplay-Bold", size: 30)
     }
     
+    enum Registration {
+        static let title = Font.custom("SFUIDisplay-Bold", size: 36)
+        static let subTitle = Font.custom("SFUIDisplay-Regular", size: 14)
+    }
+    
     enum Button {
         static let primary = Font.system(size: 16, weight: .semibold)
     }
+    
 }

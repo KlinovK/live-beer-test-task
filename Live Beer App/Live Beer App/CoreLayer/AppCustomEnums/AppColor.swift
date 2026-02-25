@@ -12,7 +12,9 @@ enum AppColor {
     // MARK: - Brand
     
     static let primaryText = Color(hex: "08070C")
+    static let secondaryText = Color(hex: "8E8E93")
     static let yellow = Color(hex: "FFE100")
+    static let error = Color(hex: "FF0000")
     
     static let gradientStart = Color(hex: "E94560")
     static let gradientEnd = Color(hex: "C62A47")

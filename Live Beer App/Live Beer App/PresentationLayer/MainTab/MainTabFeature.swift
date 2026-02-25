@@ -7,9 +7,7 @@
 
 import Foundation
 import SwiftUI
-import Combine
 
-// MARK: - Tab enum
 enum AppTab: Int, CaseIterable, Equatable {
     case main = 0
     case discounts
@@ -55,18 +53,4 @@ func mainTabReducer(
         state.selectedTab = tab
         return .none
     }
-}
-
-// MARK: - Tab ViewModel
-@MainActor
-final class MainTabViewModel: ObservableObject {
-    @Published var state: MainTabState
-    let dispatch: (MainTabAction) -> Void
-    
-    init(state: MainTabState, dispatch: @escaping (MainTabAction) -> Void) {
-        self.state = state
-        self.dispatch = dispatch
-    }
-    
-    func selectTab(_ tab: AppTab) { dispatch(.tabSelected(tab)) }
 }

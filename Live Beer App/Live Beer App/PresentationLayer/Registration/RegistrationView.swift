@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 
 struct RegistrationView: View {
+    
     let state: RegistrationState
     let dispatch: (RegistrationAction) -> Void
     
@@ -24,7 +25,7 @@ struct RegistrationView: View {
                 VStack(alignment: .leading, spacing: 0) {
                     // Header
                     headerSection
-                        .padding(.top, 60)
+                        .padding(.top, 56)
                         .padding(.horizontal, 24)
                     
                     // Form
@@ -34,113 +35,137 @@ struct RegistrationView: View {
                     
                     // Register Button
                     registerButton
-                        .padding(.top, 32)
+                        .padding(.top, 24)
                         .padding(.horizontal, 24)
                         .padding(.bottom, 40)
                 }
             }
         }
         .onTapGesture { focusedField = nil }
+        .onChange(of: focusedField) { newValue in
+                    if newValue != .phone {
+                        dispatch(.phoneEditingFinished)
+                    }
+                }
     }
     
     // MARK: - Header
     private var headerSection: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Create Account")
-                .font(.system(size: 30, weight: .bold))
-                .foregroundColor(Color(hex: "1A1A2E"))
+            Text("Регистрация аккаунта")
+                .font(AppFont.Registration.title)
+                .foregroundColor(AppColor.primaryText)
             
-            Text("Fill in the details below to get started")
-                .font(.system(size: 15, weight: .regular))
-                .foregroundColor(Color(hex: "8A8FA8"))
+            Text("Заполните поля данных ниже")
+                .font(AppFont.Registration.subTitle)
+                .foregroundColor(AppColor.secondaryText)
         }
     }
     
     // MARK: - Form
     private var formSection: some View {
-        VStack(spacing: 20) {
-            // Phone field
-            FormField(icon: "phone.fill", placeholder: "Phone Number", text: Binding(
-                get: { state.phoneNumber },
-                set: { dispatch(.phoneNumberChanged($0)) }
-            ), keyboardType: .phonePad)
+        VStack(spacing: 8) {
+            FormField(
+                title: "Номер телефона",
+                placeholder: "+7",
+                text: Binding(
+                    get: { state.phoneNumber },
+                    set: { dispatch(.phoneNumberChanged($0)) }
+                ),
+                keyboardType: .phonePad,
+                isInvalid: state.didFinishEditingPhone && !state.isPhoneValid
+            )
             .focused($focusedField, equals: .phone)
             
-            // Name field
-            FormField(icon: "person.fill", placeholder: "Full Name", text: Binding(
-                get: { state.name },
-                set: { dispatch(.nameChanged($0)) }
-            ))
+            FormField(
+                title: "Ваше имя",
+                placeholder: "Введите имя",
+                text: Binding(
+                    get: { state.name },
+                    set: { dispatch(.nameChanged($0)) }
+                ),
+                isInvalid: false
+            )
             .focused($focusedField, equals: .name)
             
-            // Birth date field
             birthDateField
-            
-            // Agreement
             agreementRow
         }
     }
     
     // MARK: - Birth Date
     private var birthDateField: some View {
-        VStack(spacing: 0) {
-            Button(action: { dispatch(.datePickerToggled) }) {
+        VStack(alignment: .leading, spacing: 6) {
+            
+            // Title
+            Text("Дата рождения")
+                .font(AppFont.Registration.subTitle)
+                .foregroundColor(AppColor.secondaryText)
+            
+            // Field Button
+            Button {
+                withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+                    dispatch(.datePickerToggled)
+                }
+            } label: {
                 HStack {
-                    Image(systemName: "calendar")
-                        .foregroundColor(Color(hex: "E94560"))
-                        .frame(width: 20)
-                    
-                    Text(state.formattedBirthDate)
+                    Text(state.formattedBirthDate.isEmpty ? "ДД.ММ.ГГ" : state.formattedBirthDate)
                         .font(.system(size: 15))
-                        .foregroundColor(Color(hex: "1A1A2E"))
+                        .foregroundColor(
+                            state.formattedBirthDate.isEmpty
+                            ? AppColor.secondaryText.opacity(0.6)
+                            : AppColor.secondaryText
+                        )
                     
                     Spacer()
-                    
-                    Image(systemName: state.isDatePickerVisible ? "chevron.up" : "chevron.down")
-                        .foregroundColor(Color(hex: "8A8FA8"))
-                        .font(.system(size: 12, weight: .semibold))
                 }
                 .padding(.horizontal, 16)
                 .frame(height: 54)
                 .background(Color.white)
                 .cornerRadius(14)
                 .shadow(color: Color.black.opacity(0.05), radius: 6, x: 0, y: 2)
+                .contentShape(Rectangle())
             }
+            .buttonStyle(.plain)
             
             if state.isDatePickerVisible {
                 DatePicker(
                     "",
                     selection: Binding(
-                        get: { state.birthDate },
+                        get: { state.birthDate ?? Date() },
                         set: { dispatch(.birthDateChanged($0)) }
                     ),
+                    in: ...Date(),
                     displayedComponents: .date
                 )
-                .datePickerStyle(.graphical)
+                .datePickerStyle(.wheel)
+                .labelsHidden()
+                .frame(maxWidth: .infinity)
                 .background(Color.white)
                 .cornerRadius(14)
                 .padding(.top, 4)
-                .transition(.scale(scale: 0.95, anchor: .top).combined(with: .opacity))
-                .animation(.spring(response: 0.3), value: state.isDatePickerVisible)
+                .transition(.move(edge: .top).combined(with: .opacity))
             }
         }
     }
     
-    // MARK: - Agreement
     private var agreementRow: some View {
-        Button(action: { dispatch(.agreementToggled) }) {
-            HStack(spacing: 12) {
+        Button {
+            withAnimation(.easeInOut(duration: 0.15)) {
+                dispatch(.agreementToggled)
+            }
+        } label: {
+            HStack(alignment: .top, spacing: 10) {
+                
+                // Checkbox
                 ZStack {
-                    RoundedRectangle(cornerRadius: 6)
-                        .stroke(
-                            state.isAgreementChecked ? Color(hex: "E94560") : Color(hex: "D0D3E0"),
-                            lineWidth: 2
+                    RoundedRectangle(cornerRadius: 4)
+                        .stroke(AppColor.border, lineWidth: 2)
+                        .background(
+                            RoundedRectangle(cornerRadius: 4)
+                                .fill(state.isAgreementChecked ? AppColor.border : Color.clear)
                         )
                         .frame(width: 22, height: 22)
-                        .background(
-                            RoundedRectangle(cornerRadius: 6)
-                                .fill(state.isAgreementChecked ? Color(hex: "E94560") : Color.clear)
-                        )
                     
                     if state.isAgreementChecked {
                         Image(systemName: "checkmark")
@@ -148,75 +173,65 @@ struct RegistrationView: View {
                             .foregroundColor(.white)
                     }
                 }
+                .padding(.top, 2) // better alignment with multiline text
                 
-                Text("I agree to the Terms & Conditions")
-                    .font(.system(size: 14))
-                    .foregroundColor(Color(hex: "4A4F6B"))
+                // Text
+                Text("Я согласен с условиями обработки персональных данных.")
+                    .font(AppFont.Registration.subTitle)
+                    .foregroundColor(AppColor.primaryText)
+                    .multilineTextAlignment(.leading)
+                    .fixedSize(horizontal: false, vertical: true)
                 
-                Spacer()
+                Spacer(minLength: 0)
             }
+            .contentShape(Rectangle()) // makes entire row tappable
         }
+        .buttonStyle(.plain)
     }
     
     // MARK: - Register Button
     private var registerButton: some View {
-        Button(action: { dispatch(.registerButtonTapped) }) {
-            ZStack {
-                if state.isLoading {
-                    ProgressView()
-                        .progressViewStyle(.circular)
-                        .tint(.white)
-                } else {
-                    Text("Register")
-                        .font(.system(size: 16, weight: .bold))
-                        .foregroundColor(.white)
-                }
-            }
-            .frame(maxWidth: .infinity)
-            .frame(height: 54)
-            .background(
-                state.isValid
-                ? LinearGradient(colors: [Color(hex: "E94560"), Color(hex: "C62A47")], startPoint: .leading, endPoint: .trailing)
-                : LinearGradient(colors: [Color(hex: "D0D3E0"), Color(hex: "D0D3E0")], startPoint: .leading, endPoint: .trailing)
-            )
-            .cornerRadius(14)
+        OnboardingButton(
+            title: "Зарегистрироваться",
+            style: .yellow,
+            isEnabled: state.isValid
+        ) {
+            dispatch(.registerButtonTapped)
         }
-        .disabled(!state.isValid || state.isLoading)
     }
 }
 
-// MARK: - Form Field Component
 private struct FormField: View {
-    let icon: String
+    
+    let title: String
     let placeholder: String
     @Binding var text: String
     var keyboardType: UIKeyboardType = .default
-    
+    let isInvalid: Bool
+        
     var body: some View {
-        HStack(spacing: 12) {
-            Image(systemName: icon)
-                .foregroundColor(Color(hex: "E94560"))
-                .frame(width: 20)
+        VStack(alignment: .leading, spacing: 4) {
             
-            TextField(placeholder, text: $text)
-                .font(.system(size: 15))
-                .keyboardType(keyboardType)
-                .foregroundColor(Color(hex: "1A1A2E"))
+            Text(title)
+                .font(AppFont.Registration.subTitle)
+                .foregroundColor(isInvalid ? AppColor.error : AppColor.secondaryText)
+            
+            HStack {
+                TextField(placeholder, text: $text)
+                    .font(AppFont.Registration.subTitle)
+                    .foregroundColor(AppColor.primaryText)
+                    .keyboardType(keyboardType)
+            }
+            .padding(.horizontal, 16)
+            .frame(height: 48)
+            .background(AppColor.background)
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(
+                        isInvalid ? AppColor.error : AppColor.border,
+                        lineWidth: 1
+                    )
+            )
         }
-        .padding(.horizontal, 16)
-        .frame(height: 54)
-        .background(Color.white)
-        .cornerRadius(14)
-        .shadow(color: Color.black.opacity(0.05), radius: 6, x: 0, y: 2)
-    }
-}
-
-// MARK: - Preview
-struct RegistrationView_Previews: PreviewProvider {
-    static var previews: some View {
-        RegistrationView(
-            state: RegistrationState(),
-            dispatch: { _ in }
-        )
     }
 }

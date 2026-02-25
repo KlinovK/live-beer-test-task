@@ -5,11 +5,8 @@
 //  Created by Константин Клинов on 25/02/26.
 //
 
-import Foundation
 import SwiftUI
-import Combine
 
-// MARK: - Onboarding State
 struct OnboardingState: Equatable {
     var isRegistrationEnabled: Bool = true
     var isEnterWithoutRegistrationEnabled: Bool = false
@@ -30,24 +27,12 @@ func onboardingReducer(
 ) -> Effect<OnboardingAction> {
     switch action {
     case .registerTapped:
+        // Navigation handled by coordinator
         return .none
     case .enterWithoutRegistrationTapped:
         return .none
     case .enterTapped:
         return .none
-    }
-}
-
-// MARK: - Onboarding Store
-final class OnboardingStore: ObservableObject {
-    @MainActor @Published private(set) var state: OnboardingState
-
-    init(initialState: OnboardingState = OnboardingState()) {
-        self.state = initialState
-    }
-
-    @MainActor func send(_ action: OnboardingAction) {
-        _ = onboardingReducer(state: &state, action: action)
     }
 }
 
