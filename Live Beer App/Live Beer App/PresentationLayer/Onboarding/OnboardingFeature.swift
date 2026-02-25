@@ -38,18 +38,16 @@ func onboardingReducer(
     }
 }
 
-// MARK: - Onboarding ViewModel
-@MainActor
-final class OnboardingViewModel: ObservableObject {
-    @Published var state: OnboardingState
-    let dispatch: (OnboardingAction) -> Void
+// MARK: - Onboarding Store
+final class OnboardingStore: ObservableObject {
+    @MainActor @Published private(set) var state: OnboardingState
 
-    init(state: OnboardingState, dispatch: @escaping (OnboardingAction) -> Void) {
-        self.state = state
-        self.dispatch = dispatch
+    init(initialState: OnboardingState = OnboardingState()) {
+        self.state = initialState
     }
 
-    func registerTapped() { dispatch(.registerTapped) }
-    func enterWithoutRegistrationTapped() { dispatch(.enterWithoutRegistrationTapped) }
-    func enterTapped() { dispatch(.enterTapped) }
+    @MainActor func send(_ action: OnboardingAction) {
+        _ = onboardingReducer(state: &state, action: action)
+    }
 }
+
