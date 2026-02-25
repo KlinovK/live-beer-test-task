@@ -11,12 +11,14 @@ import SwiftUI
 // MARK: - MainTabView
 struct MainTabView: View {
     
+    let username: String
     let state: MainTabState
     let dispatch: (MainTabAction) -> Void
     
-    init(state: MainTabState, dispatch: @escaping (MainTabAction) -> Void) {
+    init(username: String, state: MainTabState, dispatch: @escaping (MainTabAction) -> Void) {
         self.state = state
         self.dispatch = dispatch
+        self.username = username
         
         let appearance = UITabBarAppearance()
         appearance.configureWithOpaqueBackground()
@@ -44,7 +46,7 @@ struct MainTabView: View {
             set: { dispatch(.tabSelected(AppTab(rawValue: $0) ?? .main)) }
         )) {
             
-            MainScreenView()
+            MainScreenView(username: username)
                 .tabItem {
                     Label(AppTab.main.title, systemImage: AppTab.main.icon)
                 }
@@ -76,8 +78,8 @@ struct MainTabView: View {
 
 struct MainScreenView: View {
     
-    var userName: String = "Name"
-    
+    let username: String
+
     var body: some View {
         ZStack(alignment: .top) {
             
@@ -129,7 +131,7 @@ private extension MainScreenView {
                     .font(AppFont.MainTab.title)
                     .foregroundColor(AppColor.secondaryText)
                     
-                    Text(userName)
+                    Text(username)
                     .font(AppFont.MainTab.title)
                     .foregroundColor(AppColor.primaryText)
             }

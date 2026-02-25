@@ -36,6 +36,7 @@ enum AppTab: Int, CaseIterable, Equatable {
 // MARK: - MainTab State
 struct MainTabState: Equatable {
     var selectedTab: AppTab = .main
+    var username: String = ""
 }
 
 // MARK: - MainTab Actions

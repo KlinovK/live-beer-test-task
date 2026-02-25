@@ -8,21 +8,18 @@
 import Foundation
 import SwiftUI
 
-// MARK: - Router / Navigation
-
 enum Route: Equatable {
     case onboarding
     case registration
     case mainTab
 }
 
-// MARK: - App Coordinator (Root)
-
 struct AppCoordinatorState: Equatable {
     var route: Route = .onboarding
     var onboarding = OnboardingState()
     var registration = RegistrationState()
     var mainTab = MainTabState()
+    var username: String?
 }
 
 enum AppCoordinatorAction {
@@ -51,6 +48,7 @@ func appCoordinatorReducer(
         let effect = registrationReducer(state: &state.registration, action: registrationAction)
         switch registrationAction {
         case .registerButtonTapped where state.registration.isValid:
+            state.username = state.registration.name
             state.route = .mainTab
         default:
             break
