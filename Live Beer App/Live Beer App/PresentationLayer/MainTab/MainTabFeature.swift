@@ -16,10 +16,10 @@ enum AppTab: Int, CaseIterable, Equatable {
     
     var title: String {
         switch self {
-        case .main: return "Main"
-        case .discounts: return "Discounts"
-        case .markets: return "Markets"
-        case .profile: return "Profile"
+        case .main: return "Главная"
+        case .discounts: return "Акции"
+        case .markets: return "Магазины"
+        case .profile: return "Профиль"
         }
     }
     

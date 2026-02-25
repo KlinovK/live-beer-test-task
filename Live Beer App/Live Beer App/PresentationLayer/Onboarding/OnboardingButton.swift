@@ -49,13 +49,7 @@ enum OnboardingButtonStyle {
             
         case .primary:
             return .init(
-                background: AnyView(
-                    LinearGradient(
-                        colors: [AppColor.gradientStart, AppColor.gradientEnd],
-                        startPoint: .leading,
-                        endPoint: .trailing
-                    )
-                ),
+                background: AnyView(AppColor.white),
                 foregroundColor: .white,
                 borderColor: .clear,
                 borderWidth: 0,

@@ -16,9 +16,6 @@ enum AppColor {
     static let yellow = Color(hex: "FFE100")
     static let error = Color(hex: "FF0000")
     
-    static let gradientStart = Color(hex: "E94560")
-    static let gradientEnd = Color(hex: "C62A47")
-    
     static let border = Color(hex: "E4E4E4")
     
     // MARK: - Base

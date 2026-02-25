@@ -19,21 +19,18 @@ struct RegistrationView: View {
     
     var body: some View {
         ZStack {
-            Color(hex: "F5F7FA").ignoresSafeArea()
+            AppColor.background.ignoresSafeArea()
             
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 0) {
-                    // Header
                     headerSection
                         .padding(.top, 56)
                         .padding(.horizontal, 24)
                     
-                    // Form
                     formSection
                         .padding(.top, 32)
                         .padding(.horizontal, 24)
                     
-                    // Register Button
                     registerButton
                         .padding(.top, 24)
                         .padding(.horizontal, 24)
@@ -43,10 +40,10 @@ struct RegistrationView: View {
         }
         .onTapGesture { focusedField = nil }
         .onChange(of: focusedField) { newValue in
-                    if newValue != .phone {
-                        dispatch(.phoneEditingFinished)
-                    }
-                }
+            if newValue != .phone {
+                dispatch(.phoneEditingFinished)
+            }
+        }
     }
     
     // MARK: - Header
@@ -97,12 +94,10 @@ struct RegistrationView: View {
     private var birthDateField: some View {
         VStack(alignment: .leading, spacing: 6) {
             
-            // Title
             Text("Дата рождения")
                 .font(AppFont.Registration.subTitle)
                 .foregroundColor(AppColor.secondaryText)
             
-            // Field Button
             Button {
                 withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
                     dispatch(.datePickerToggled)
@@ -157,7 +152,6 @@ struct RegistrationView: View {
         } label: {
             HStack(alignment: .top, spacing: 10) {
                 
-                // Checkbox
                 ZStack {
                     RoundedRectangle(cornerRadius: 4)
                         .stroke(AppColor.border, lineWidth: 2)
@@ -173,9 +167,8 @@ struct RegistrationView: View {
                             .foregroundColor(.white)
                     }
                 }
-                .padding(.top, 2) // better alignment with multiline text
+                .padding(.top, 2)
                 
-                // Text
                 Text("Я согласен с условиями обработки персональных данных.")
                     .font(AppFont.Registration.subTitle)
                     .foregroundColor(AppColor.primaryText)
@@ -184,7 +177,7 @@ struct RegistrationView: View {
                 
                 Spacer(minLength: 0)
             }
-            .contentShape(Rectangle()) // makes entire row tappable
+            .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
     }
