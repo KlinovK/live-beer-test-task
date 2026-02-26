@@ -5,9 +5,9 @@
 //  Created by Константин Клинов on 25/02/26.
 //
 
-import Foundation
 import SwiftUI
 
+// Registration screen view
 struct RegistrationView: View {
     
     let state: RegistrationState
@@ -19,6 +19,7 @@ struct RegistrationView: View {
     
     var body: some View {
         ZStack {
+            // Background color
             AppColor.background.ignoresSafeArea()
             
             ScrollView(showsIndicators: false) {
@@ -38,6 +39,7 @@ struct RegistrationView: View {
                 }
             }
         }
+        // Dismiss keyboard on tap outside
         .onTapGesture { focusedField = nil }
         .onChange(of: focusedField) { newValue in
             if newValue != .phone {
@@ -47,6 +49,8 @@ struct RegistrationView: View {
     }
     
     // MARK: - Header
+    
+    // Screen title and subtitle
     private var headerSection: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("Регистрация аккаунта")
@@ -60,8 +64,10 @@ struct RegistrationView: View {
     }
     
     // MARK: - Form
+    
     private var formSection: some View {
         VStack(spacing: 8) {
+            // Phone number field
             FormField(
                 title: "Номер телефона",
                 placeholder: "+7",
@@ -74,6 +80,7 @@ struct RegistrationView: View {
             )
             .focused($focusedField, equals: .phone)
             
+            // Name field
             FormField(
                 title: "Ваше имя",
                 placeholder: "Введите имя",
@@ -91,6 +98,8 @@ struct RegistrationView: View {
     }
     
     // MARK: - Birth Date
+    
+    // Birth date selection field with optional date picker
     private var birthDateField: some View {
         VStack(alignment: .leading, spacing: 6) {
             
@@ -144,6 +153,9 @@ struct RegistrationView: View {
         }
     }
     
+    // MARK: - Agreement Row
+    
+    // Checkbox and agreement text
     private var agreementRow: some View {
         Button {
             withAnimation(.easeInOut(duration: 0.15)) {
@@ -183,6 +195,8 @@ struct RegistrationView: View {
     }
     
     // MARK: - Register Button
+    
+    // Submit registration
     private var registerButton: some View {
         AppButton(
             title: "Зарегистрироваться",
@@ -193,6 +207,8 @@ struct RegistrationView: View {
         }
     }
 }
+
+// MARK: - Form Field Component
 
 private struct FormField: View {
     
@@ -205,10 +221,12 @@ private struct FormField: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             
+            // Field label
             Text(title)
                 .font(AppFont.Registration.subTitle)
                 .foregroundColor(isInvalid ? AppColor.error : AppColor.secondaryText)
             
+            // Text input
             HStack {
                 TextField(placeholder, text: $text)
                     .font(AppFont.Registration.subTitle)

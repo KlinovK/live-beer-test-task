@@ -5,10 +5,8 @@
 //  Created by Константин Клинов on 25/02/26.
 //
 
-import Foundation
 import SwiftUI
 
-// MARK: - MainTabView
 struct MainTabView: View {
     
     let username: String
@@ -20,6 +18,7 @@ struct MainTabView: View {
         self.dispatch = dispatch
         self.username = username
         
+        // Configure TabBar appearance
         let appearance = UITabBarAppearance()
         appearance.configureWithOpaqueBackground()
         
@@ -39,11 +38,13 @@ struct MainTabView: View {
     
     var body: some View {
         
+        // Bind selected tab to state
         TabView(selection: Binding(
             get: { state.selectedTab.rawValue },
             set: { dispatch(.tabSelected(AppTab(rawValue: $0) ?? .main)) }
         )) {
             
+            // Main tab
             MainScreenView(
                 username: username,
                 state: state,
@@ -54,6 +55,7 @@ struct MainTabView: View {
             }
             .tag(AppTab.main.rawValue)
             
+            // Other tabs
             DiscountsScreenView()
                 .tabItem {
                     Label(AppTab.discounts.title, systemImage: AppTab.discounts.icon)
@@ -76,8 +78,7 @@ struct MainTabView: View {
     }
 }
 
-// MARK: - Empty Tab Screens
-
+// Main screen inside the first tab
 struct MainScreenView: View {
     
     let username: String
@@ -87,6 +88,7 @@ struct MainScreenView: View {
     var body: some View {
         ZStack(alignment: .top) {
             
+            // Top background image
             Image("BrandingBackgroundIcon")
                 .resizable()
                 .scaledToFill()
@@ -95,9 +97,9 @@ struct MainScreenView: View {
                 .clipped()
                 .ignoresSafeArea(edges: [.top, .horizontal])
             
+            // Scrollable content
             ScrollView(showsIndicators: false) {
                 VStack {
-                    
                     headerSection
                     actionSection
                     iconsSection
@@ -146,6 +148,7 @@ private extension MainScreenView {
 
 private extension MainScreenView {
     
+    // Shows button or barcode depending on state
     var actionSection: some View {
         Group {
             if state.isShowingBarcode,
@@ -332,6 +335,7 @@ private extension MainScreenView {
     }
 }
 
+// Placeholder screens
 struct DiscountsScreenView: View {
     var body: some View {
         EmptyTabView(tab: .discounts)
@@ -350,6 +354,7 @@ struct ProfileScreenView: View {
     }
 }
 
+// Simple placeholder view
 struct EmptyTabView: View {
     let tab: AppTab
     
@@ -359,7 +364,6 @@ struct EmptyTabView: View {
             Text("Coming soon")
                 .font(.system(size: 14))
                 .foregroundColor(Color(hex: "8A8FA8"))
-            
         }
         .navigationTitle(tab.title)
     }

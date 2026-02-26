@@ -5,10 +5,9 @@
 //  Created by Константин Клинов on 25/02/26.
 //
 
-import Foundation
 import SwiftUI
 
-
+// Onboarding screen
 struct OnboardingView: View {
     
     let state: OnboardingState
@@ -16,6 +15,7 @@ struct OnboardingView: View {
     
     var body: some View {
         ZStack {
+            // Background color
             AppColor.background
                 .ignoresSafeArea()
             
@@ -38,6 +38,7 @@ struct OnboardingView: View {
 
 private extension OnboardingView {
     
+    // Top branding section with background and logo
     var headerSection: some View {
         ZStack {
             Image("BrandingBackgroundIcon")
@@ -53,6 +54,7 @@ private extension OnboardingView {
         .ignoresSafeArea(edges: [.top, .horizontal])
     }
     
+    // Title text section
     var titleSection: some View {
         Text("Программа лояльности для клиентов LiveBeer")
             .font(AppFont.Onboarding.title)
@@ -61,9 +63,11 @@ private extension OnboardingView {
             .padding(.horizontal, 25)
     }
     
+    // Buttons section
     var buttonsSection: some View {
         VStack(spacing: 12) {
             
+            // Login and Registration buttons
             HStack(spacing: 10) {
                 AppButton(
                     title: "Вход",
@@ -84,6 +88,7 @@ private extension OnboardingView {
                 }
             }
             
+            // Guest login button
             AppButton(
                 title: "Войти без регистрации",
                 style: .secondary,

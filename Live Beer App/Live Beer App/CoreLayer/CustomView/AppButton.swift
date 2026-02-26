@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+// Reusable app button component
 struct AppButton: View {
     
     let title: String
@@ -21,6 +22,7 @@ struct AppButton: View {
         Button(action: action) {
             HStack(spacing: 6) {
                 
+                // Optional SF Symbol icon
                 if let icon {
                     Image(systemName: icon)
                 }
@@ -35,18 +37,20 @@ struct AppButton: View {
             .foregroundColor(config.foregroundColor)
             .cornerRadius(config.cornerRadius)
             .overlay(
+                // Optional border
                 RoundedRectangle(cornerRadius: config.cornerRadius)
                     .stroke(config.borderColor, lineWidth: config.borderWidth)
             )
         }
-        .disabled(!isEnabled)
-        .opacity(isEnabled ? 1.0 : 0.35)
+        .disabled(!isEnabled)                 // Disable interaction
+        .opacity(isEnabled ? 1.0 : 0.35)      // Dim when disabled
     }
 }
 
 
 // MARK: - Button Style
 
+// Available button styles
 enum OnboardingButtonStyle {
     case primary
     case secondary
@@ -54,6 +58,7 @@ enum OnboardingButtonStyle {
     case yellow
     case qr
     
+    // Returns visual configuration for each style
     var configuration: OnboardingButtonStyleConfiguration {
         switch self {
             
@@ -110,6 +115,7 @@ enum OnboardingButtonStyle {
     }
 }
 
+// Holds visual parameters for a button style
 struct OnboardingButtonStyleConfiguration {
     let background: AnyView
     let foregroundColor: Color
