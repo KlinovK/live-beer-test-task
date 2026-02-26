@@ -20,6 +20,11 @@ enum AppFont {
     
     enum MainTab {
         static let title = Font.custom("SFUIDisplay-Bold", size: 20)
+        static let largeTitle = Font.custom("SFUIDisplay-Bold", size: 32)
+        static let subLargeTitle = Font.custom("SFUIDisplay-Semibold", size: 24)
+        static let subTitle = Font.custom("SFUIDisplay-Semibold", size: 16)
+        static let cardTitle = Font.custom("SFUIDisplay-Semibold", size: 14)
+        static let cardSubTitle = Font.custom("SFUIDisplay-Regular", size: 12)
     }
     
     enum Button {

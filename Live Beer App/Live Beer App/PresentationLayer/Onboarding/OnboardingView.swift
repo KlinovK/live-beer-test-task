@@ -65,27 +65,30 @@ private extension OnboardingView {
         VStack(spacing: 12) {
             
             HStack(spacing: 10) {
-                OnboardingButton(
+                AppButton(
                     title: "Вход",
                     style: .yellow,
-                    isEnabled: state.isEnterEnabled
+                    isEnabled: state.isEnterEnabled,
+                    icon: nil
                 ) {
                     dispatch(.enterTapped)
                 }
                 
-                OnboardingButton(
+                AppButton(
                     title: "Регистрация",
                     style: .yellow,
-                    isEnabled: state.isRegistrationEnabled
+                    isEnabled: state.isRegistrationEnabled,
+                    icon: nil
                 ) {
                     dispatch(.registerTapped)
                 }
             }
             
-            OnboardingButton(
+            AppButton(
                 title: "Войти без регистрации",
                 style: .secondary,
-                isEnabled: state.isEnterWithoutRegistrationEnabled
+                isEnabled: state.isEnterWithoutRegistrationEnabled,
+                icon: nil
             ) {
                 dispatch(.enterWithoutRegistrationTapped)
             }

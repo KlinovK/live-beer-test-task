@@ -184,10 +184,10 @@ struct RegistrationView: View {
     
     // MARK: - Register Button
     private var registerButton: some View {
-        OnboardingButton(
+        AppButton(
             title: "Зарегистрироваться",
             style: .yellow,
-            isEnabled: state.isValid
+            isEnabled: state.isValid, icon: nil
         ) {
             dispatch(.registerButtonTapped)
         }

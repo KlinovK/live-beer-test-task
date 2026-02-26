@@ -7,28 +7,37 @@
 
 import SwiftUI
 
-struct OnboardingButton: View {
+struct AppButton: View {
     
     let title: String
     let style: OnboardingButtonStyle
     let isEnabled: Bool
+    let icon: String?
     let action: () -> Void
     
     var body: some View {
         let config = style.configuration
         
         Button(action: action) {
-            Text(title)
-                .font(AppFont.Button.primary)
-                .frame(maxWidth: .infinity)
-                .frame(height: 54)
-                .background(config.background)
-                .foregroundColor(config.foregroundColor)
-                .cornerRadius(config.cornerRadius)
-                .overlay(
-                    RoundedRectangle(cornerRadius: config.cornerRadius)
-                        .stroke(config.borderColor, lineWidth: config.borderWidth)
-                )
+            HStack(spacing: 6) {
+                
+                if let icon {
+                    Image(systemName: icon)
+                }
+                
+                Text(title)
+                    .font(AppFont.Button.primary)
+            }
+            .font(AppFont.Button.primary)
+            .frame(maxWidth: .infinity)
+            .frame(height: 54)
+            .background(config.background)
+            .foregroundColor(config.foregroundColor)
+            .cornerRadius(config.cornerRadius)
+            .overlay(
+                RoundedRectangle(cornerRadius: config.cornerRadius)
+                    .stroke(config.borderColor, lineWidth: config.borderWidth)
+            )
         }
         .disabled(!isEnabled)
         .opacity(isEnabled ? 1.0 : 0.35)
@@ -43,6 +52,7 @@ enum OnboardingButtonStyle {
     case secondary
     case ghost
     case yellow
+    case qr
     
     var configuration: OnboardingButtonStyleConfiguration {
         switch self {
@@ -53,7 +63,8 @@ enum OnboardingButtonStyle {
                 foregroundColor: .white,
                 borderColor: .clear,
                 borderWidth: 0,
-                cornerRadius: 14
+                cornerRadius: 14,
+                height: 56
             )
             
         case .secondary:
@@ -62,7 +73,8 @@ enum OnboardingButtonStyle {
                 foregroundColor: AppColor.primaryText,
                 borderColor: AppColor.border,
                 borderWidth: 1,
-                cornerRadius: 10
+                cornerRadius: 10,
+                height: 56
             )
             
         case .ghost:
@@ -71,7 +83,8 @@ enum OnboardingButtonStyle {
                 foregroundColor: .white.opacity(0.6),
                 borderColor: .white.opacity(0.3),
                 borderWidth: 1.5,
-                cornerRadius: 14
+                cornerRadius: 14,
+                height: 56
             )
             
         case .yellow:
@@ -80,7 +93,18 @@ enum OnboardingButtonStyle {
                 foregroundColor: AppColor.primaryText,
                 borderColor: .clear,
                 borderWidth: 0,
-                cornerRadius: 10
+                cornerRadius: 10,
+                height: 56
+            )
+            
+        case .qr:
+            return .init(
+                background: AnyView(AppColor.yellow),
+                foregroundColor: AppColor.primaryText,
+                borderColor: .clear,
+                borderWidth: 0,
+                cornerRadius: 10,
+                height: 56
             )
         }
     }
@@ -92,4 +116,5 @@ struct OnboardingButtonStyleConfiguration {
     let borderColor: Color
     let borderWidth: CGFloat
     let cornerRadius: CGFloat
+    let height: CGFloat
 }

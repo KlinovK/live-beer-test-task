@@ -23,13 +23,11 @@ struct MainTabView: View {
         let appearance = UITabBarAppearance()
         appearance.configureWithOpaqueBackground()
         
-        // Selected item
         appearance.stackedLayoutAppearance.selected.iconColor = UIColor(AppColor.yellow)
         appearance.stackedLayoutAppearance.selected.titleTextAttributes = [
             .foregroundColor: UIColor(AppColor.yellow)
         ]
         
-        // Unselected item
         appearance.stackedLayoutAppearance.normal.iconColor = UIColor(AppColor.secondaryText)
         appearance.stackedLayoutAppearance.normal.titleTextAttributes = [
             .foregroundColor: UIColor(AppColor.secondaryText)
@@ -92,9 +90,10 @@ struct MainScreenView: View {
                 .ignoresSafeArea(edges: [.top, .horizontal])
             
             ScrollView(showsIndicators: false) {
-                VStack(spacing: 24) {
+                VStack {
                     
                     headerSection
+                    actionSection
                     iconsSection
                     infoCardSection
                     labelWithIconSection
@@ -114,7 +113,6 @@ private extension MainScreenView {
     var headerSection: some View {
         
         VStack {
-            
             HStack {
                 ZStack {
                     RoundedRectangle(cornerRadius: 10)
@@ -135,64 +133,79 @@ private extension MainScreenView {
                     .font(AppFont.MainTab.title)
                     .foregroundColor(AppColor.primaryText)
             }
-            
-            
-            Spacer()
-            
-            Button {
-                print("Показать код")
-            } label: {
-                HStack(spacing: 6) {
-                    Image(systemName: "qrcode")
-                    Text("Показать мой код")
-                        .font(.subheadline)
-                        .bold()
-                }
-                .padding(.horizontal, 12)
-                .padding(.vertical, 8)
-                .background(Color.yellow)
-                .cornerRadius(10)
-                .foregroundColor(.black)
-            }
         }
     }
 }
 
 private extension MainScreenView {
-    
-    var iconsSection: some View {
-        VStack(spacing: 16) {
+    var actionSection: some View {
+        AppButton(title: "Показать мой код",
+                  style: .qr,
+                  isEnabled: true,
+                  icon: "qrcode", action: {
             
-            // Row 1 – горизонтальные 10 иконок
+        })
+    }
+}
+
+private extension MainScreenView {
+        
+    var iconsSection: some View {
+        
+        let addedCount = Int.random(in: 0...9)
+
+        return VStack {
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 16) {
-                    ForEach(0..<10) { _ in
-                        Image(systemName: "star.fill")
-                            .frame(width: 44, height: 44)
-                            .background(Color.yellow.opacity(0.2))
-                            .clipShape(Circle())
+                HStack(spacing: 7) {
+                    ForEach(0..<10, id: \.self) { index in
+                        if index < addedCount {
+                            Image("CupAddedIcon")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 24, height: 54)
+                            
+                        } else if index == 9 {
+                            Image("LastCupIcon")
+                                .frame(width: 24, height: 54)
+                            
+                        } else {
+                            Image("CupIcon")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 24, height: 54)
+                        }
                     }
                 }
+                .padding(.horizontal)
             }
             
             // Row 2
             HStack(alignment: .top, spacing: 16) {
                 
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Баланс")
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
+                VStack(alignment: .leading, spacing: 3) {
+                    Text("\(addedCount)/10")
+                        .font(AppFont.MainTab.largeTitle)
+                        .foregroundColor(.white)
                     
-                    Text("1 250 ₽")
-                        .font(.title3)
-                        .bold()
+                    Text("Накоплено литров")
+                        .font(AppFont.MainTab.subTitle)
+                        .foregroundColor(.white)
                 }
                 
-                Text("Используйте баллы для получения скидок и бонусов в магазинах.")
-                    .font(.footnote)
-                    .foregroundColor(.gray)
+                Rectangle()
+                    .fill(Color.gray.opacity(0.4))
+                    .frame(width: 1, height: 56)
+                
+                Text("Копите литры и получайте пиво бесплатно")
+                    .font(AppFont.MainTab.subTitle)
+                    .foregroundColor(.white)
             }
+            .padding(.horizontal)
         }
+        .frame(maxWidth: .infinity)
+        .frame(height: 152)
+        .background(AppColor.brandBlack)
+        .cornerRadius(10)
     }
 }
 
@@ -200,23 +213,48 @@ private extension MainScreenView {
     
     var infoCardSection: some View {
         HStack {
-            VStack(alignment: .leading, spacing: 4) {
-                Text("Мои заказы")
-                    .font(.headline)
+            VStack(alignment: .leading) {
+                Text("3017")
+                    .font(AppFont.MainTab.largeTitle)
+                    .foregroundColor(.white)
+                    .padding(.bottom, 3)
                 
-                Text("Просмотреть историю")
-                    .font(.subheadline)
-                    .foregroundColor(.gray)
+                Text("Накоплено баллов")
+                    .font(AppFont.MainTab.subTitle)
+                    .foregroundColor(.white)
+                    .padding(.bottom, 7)
+                
+                Text("Собирайте баллы и получайте бонусы")
+                    .font(AppFont.MainTab.subTitle)
+                    .foregroundColor(.white)
             }
-            
-            Spacer()
-            
-            Image(systemName: "chevron.right")
-                .foregroundColor(.gray)
+                        
+            Image("GlassSmallIcon")
+
         }
-        .padding()
-        .background(Color.gray.opacity(0.08))
-        .cornerRadius(14)
+        .padding(.horizontal)
+        .frame(maxWidth: .infinity)
+        .frame(height: 126)
+        .background(AppColor.brandBlack)
+        .cornerRadius(10)
+        
+         .overlay(alignment: .topTrailing) {
+             ZStack {
+                 Circle()
+                     .fill(AppColor.background)
+                     .frame(width: 36, height: 36)
+                 
+                 Circle()
+                     .fill(AppColor.yellow)
+                     .frame(width: 32, height: 32)
+                 
+                 Image(systemName: "questionmark.circle")
+                     .resizable()
+                     .scaledToFit()
+                     .frame(width: 20, height: 20)
+             }
+             .offset(x: 3, y: -3)
+         }
     }
 }
 
@@ -224,12 +262,13 @@ private extension MainScreenView {
     
     var labelWithIconSection: some View {
         HStack {
-            Text("Поддержка")
-                .font(.headline)
+            Text("Будь в курсе")
+                .font(AppFont.MainTab.subLargeTitle)
+                .foregroundColor(AppColor.primaryText)
             
             Spacer()
             
-            Image(systemName: "headphones")
+            Image("ArrowIcon")
         }
     }
 }
@@ -237,21 +276,33 @@ private extension MainScreenView {
 private extension MainScreenView {
     
     var horizontalCardsSection: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 16) {
-                ForEach(0..<3) { index in
+        
+        let cardsDescriptionArray: [(String, String)] = [
+            ("Новые сорта крафта уже в наличии в магазинах", "20.01.2022"),
+            ("Нам 10 лет повышаем скидку до 10% на всё!", "21.01.2022")
+        ]
+        
+        return ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 8) {
+                ForEach(0..<4, id: \.self) { index in
+                    
+                    let item = index.isMultiple(of: 2)
+                        ? cardsDescriptionArray[0]
+                        : cardsDescriptionArray[1]
+                    
                     VStack(alignment: .leading, spacing: 8) {
-                        Text("Карточка \(index + 1)")
-                            .font(.headline)
-                        
-                        Text("Описание карточки")
-                            .font(.subheadline)
-                            .foregroundColor(.gray)
+                        Text(item.0)
+                            .font(AppFont.MainTab.cardTitle)
+                            .foregroundColor(AppColor.primaryText)
+                        Text(item.1)
+                            .font(AppFont.MainTab.cardSubTitle)
+                            .foregroundColor(AppColor.secondaryText)
+
                     }
                     .padding()
-                    .frame(width: 220)
-                    .background(Color.yellow.opacity(0.15))
-                    .cornerRadius(16)
+                    .frame(width: 138, height: 132)
+                    .background(AppColor.yellow)
+                    .cornerRadius(10)
                 }
             }
         }
