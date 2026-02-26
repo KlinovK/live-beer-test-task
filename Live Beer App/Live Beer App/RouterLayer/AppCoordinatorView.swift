@@ -22,18 +22,11 @@ struct AppCoordinatorView: View {
         Group {
             switch store.state.route {
             case .onboarding:
-                MainTabView(
-                    username: store.state.username ?? "",
-                    state: store.state.mainTab,
-                    dispatch: { store.send(.mainTab($0)) }
+                OnboardingView(
+                    state: store.state.onboarding,
+                    dispatch: { store.send(.onboarding($0)) }
                 )
                 .transition(.opacity)
-                #warning("")
-//                OnboardingView(
-//                    state: store.state.onboarding,
-//                    dispatch: { store.send(.onboarding($0)) }
-//                )
-//                .transition(.opacity)
                 
             case .registration:
                 RegistrationView(

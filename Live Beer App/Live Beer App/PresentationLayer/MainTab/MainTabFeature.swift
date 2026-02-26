@@ -37,11 +37,14 @@ enum AppTab: Int, CaseIterable, Equatable {
 struct MainTabState: Equatable {
     var selectedTab: AppTab = .main
     var username: String = ""
+    var isShowingBarcode: Bool = false
+    var barcodeValue: String? = nil
 }
 
 // MARK: - MainTab Actions
 enum MainTabAction: Equatable {
     case tabSelected(AppTab)
+    case showBarcodeTapped
 }
 
 // MARK: - MainTab Reducer
@@ -52,6 +55,15 @@ func mainTabReducer(
     switch action {
     case .tabSelected(let tab):
         state.selectedTab = tab
+        return .none
+        
+    case .showBarcodeTapped:
+        
+        let randomCode = String(Int.random(in: 100000000...999999999))
+        
+        state.barcodeValue = randomCode
+        state.isShowingBarcode = true
+        
         return .none
     }
 }

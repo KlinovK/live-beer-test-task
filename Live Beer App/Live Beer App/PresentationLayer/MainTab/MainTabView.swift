@@ -44,11 +44,15 @@ struct MainTabView: View {
             set: { dispatch(.tabSelected(AppTab(rawValue: $0) ?? .main)) }
         )) {
             
-            MainScreenView(username: username)
-                .tabItem {
-                    Label(AppTab.main.title, systemImage: AppTab.main.icon)
-                }
-                .tag(AppTab.main.rawValue)
+            MainScreenView(
+                username: username,
+                state: state,
+                dispatch: dispatch
+            )
+            .tabItem {
+                Label(AppTab.main.title, systemImage: AppTab.main.icon)
+            }
+            .tag(AppTab.main.rawValue)
             
             DiscountsScreenView()
                 .tabItem {
@@ -77,6 +81,8 @@ struct MainTabView: View {
 struct MainScreenView: View {
     
     let username: String
+    let state: MainTabState
+    let dispatch: (MainTabAction) -> Void
 
     var body: some View {
         ZStack(alignment: .top) {
@@ -134,17 +140,32 @@ private extension MainScreenView {
                     .foregroundColor(AppColor.primaryText)
             }
         }
+        .padding(.bottom, 24)
     }
 }
 
 private extension MainScreenView {
+    
     var actionSection: some View {
-        AppButton(title: "Показать мой код",
-                  style: .qr,
-                  isEnabled: true,
-                  icon: "qrcode", action: {
-            
-        })
+        Group {
+            if state.isShowingBarcode,
+               let value = state.barcodeValue {
+                
+                BarcodeView(code: value)
+                
+            } else {
+                
+                AppButton(
+                    title: "Показать мой код",
+                    style: .qr,
+                    isEnabled: true,
+                    icon: "barcode"
+                ) {
+                    dispatch(.showBarcodeTapped)
+                }
+            }
+        }
+        .padding(.bottom, 16)
     }
 }
 
@@ -202,6 +223,7 @@ private extension MainScreenView {
             }
             .padding(.horizontal)
         }
+        .padding(.bottom, 6)
         .frame(maxWidth: .infinity)
         .frame(height: 152)
         .background(AppColor.brandBlack)
@@ -270,6 +292,7 @@ private extension MainScreenView {
             
             Image("ArrowIcon")
         }
+        .padding(.bottom, 16)
     }
 }
 
